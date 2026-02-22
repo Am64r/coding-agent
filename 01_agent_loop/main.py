@@ -1,7 +1,8 @@
+from pathlib import Path
 from dotenv import load_dotenv
 from agent import Agent, OpenAIClient
 
-load_dotenv("/Users/amr/training/.env")
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 
 def main():
