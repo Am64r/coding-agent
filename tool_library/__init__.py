@@ -1,4 +1,5 @@
 import json
+import shutil
 import importlib.util
 from pathlib import Path
 from datetime import datetime
@@ -82,5 +83,53 @@ def remove_tool(name):
         tool_path.unlink()
 
 
+def load_tool_summaries():
+    """Load schemas of all verified tools (lightweight, for prompt injection)."""
+    registry = _load_registry()
+    schemas = []
+    for entry in registry["tools"]:
+        if not entry.get("verified"):
+            continue
+        tool_path = LIBRARY_DIR / entry["file"]
+        if not tool_path.exists():
+            continue
+        try:
+            module = _load_tool_module(tool_path)
+            schemas.append(module.SCHEMA)
+        except Exception:
+            continue
+    return schemas
+
+
+def load_tool_usage_examples():
+    """Load USAGE_EXAMPLE strings from all verified tools."""
+    registry = _load_registry()
+    examples = {}
+    for entry in registry["tools"]:
+        if not entry.get("verified"):
+            continue
+        tool_path = LIBRARY_DIR / entry["file"]
+        if not tool_path.exists():
+            continue
+        try:
+            module = _load_tool_module(tool_path)
+            name = module.SCHEMA["function"]["name"]
+            if hasattr(module, "USAGE_EXAMPLE"):
+                examples[name] = module.USAGE_EXAMPLE
+        except Exception:
+            continue
+    return examples
+
+
 def list_tools():
     return _load_registry()["tools"]
+
+
+def clear_all():
+    _save_registry({"tools": []})
+    if GENERATED_DIR.exists():
+        for f in GENERATED_DIR.glob("*.py"):
+            f.unlink()
+        pycache = GENERATED_DIR / "__pycache__"
+        if pycache.exists():
+            shutil.rmtree(pycache)

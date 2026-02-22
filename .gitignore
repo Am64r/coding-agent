@@ -5,3 +5,4 @@ __pycache__/
 *.pyo
 .DS_Store
 agent/created_files/
+tool_library/generated/

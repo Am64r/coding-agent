@@ -1,0 +1,1800 @@
+{
+  "timestamp": "2026-02-22T15:56:57.835939",
+  "num_runs": 3,
+  "num_tasks": 15,
+  "configs": {
+    "gpt-4o-mini": {
+      "model": "gpt-4o-mini",
+      "with_tools": false,
+      "runs": [
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.000131,
+            "tokens_in": 605,
+            "tokens_out": 67,
+            "duration_ms": 2393.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.00021,
+            "tokens_in": 751,
+            "tokens_out": 162,
+            "duration_ms": 3517.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.00032,
+            "tokens_in": 1274,
+            "tokens_out": 215,
+            "duration_ms": 5591.7,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.000454,
+            "tokens_in": 1132,
+            "tokens_out": 474,
+            "duration_ms": 9823.4,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.00133,
+            "tokens_in": 3755,
+            "tokens_out": 1278,
+            "duration_ms": 25157.1,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.000894,
+            "tokens_in": 3076,
+            "tokens_out": 721,
+            "duration_ms": 36235.0,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": false,
+            "cost": 0.000626,
+            "tokens_in": 2309,
+            "tokens_out": 466,
+            "duration_ms": 9976.6,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.000568,
+            "tokens_in": 1331,
+            "tokens_out": 614,
+            "duration_ms": 12433.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.000523,
+            "tokens_in": 1301,
+            "tokens_out": 547,
+            "duration_ms": 11015.9,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": false,
+            "cost": 0.000657,
+            "tokens_in": 1427,
+            "tokens_out": 738,
+            "duration_ms": 14812.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.000538,
+            "tokens_in": 1228,
+            "tokens_out": 589,
+            "duration_ms": 12652.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.000616,
+            "tokens_in": 1988,
+            "tokens_out": 530,
+            "duration_ms": 15657.3,
+            "tool_calls": 3
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": false,
+            "cost": 0.000867,
+            "tokens_in": 1645,
+            "tokens_out": 1034,
+            "duration_ms": 22254.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.000575,
+            "tokens_in": 1359,
+            "tokens_out": 618,
+            "duration_ms": 11993.4,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.000383,
+            "tokens_in": 1017,
+            "tokens_out": 384,
+            "duration_ms": 7859.3,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.000129,
+            "tokens_in": 605,
+            "tokens_out": 63,
+            "duration_ms": 2198.3,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.000225,
+            "tokens_in": 753,
+            "tokens_out": 187,
+            "duration_ms": 4696.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.000391,
+            "tokens_in": 1382,
+            "tokens_out": 307,
+            "duration_ms": 6949.0,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.000534,
+            "tokens_in": 1202,
+            "tokens_out": 590,
+            "duration_ms": 11164.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.001083,
+            "tokens_in": 3390,
+            "tokens_out": 958,
+            "duration_ms": 19457.1,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.000867,
+            "tokens_in": 3062,
+            "tokens_out": 680,
+            "duration_ms": 15164.5,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": false,
+            "cost": 0.000601,
+            "tokens_in": 2299,
+            "tokens_out": 427,
+            "duration_ms": 10402.1,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.000604,
+            "tokens_in": 1392,
+            "tokens_out": 659,
+            "duration_ms": 13880.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.000519,
+            "tokens_in": 1291,
+            "tokens_out": 543,
+            "duration_ms": 10254.9,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": false,
+            "cost": 0.000644,
+            "tokens_in": 1403,
+            "tokens_out": 722,
+            "duration_ms": 14634.3,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.000583,
+            "tokens_in": 1266,
+            "tokens_out": 656,
+            "duration_ms": 13008.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": false,
+            "cost": 0.000601,
+            "tokens_in": 1873,
+            "tokens_out": 533,
+            "duration_ms": 40857.8,
+            "tool_calls": 3
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": false,
+            "cost": 0.000877,
+            "tokens_in": 1649,
+            "tokens_out": 1049,
+            "duration_ms": 21232.8,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.000579,
+            "tokens_in": 1317,
+            "tokens_out": 636,
+            "duration_ms": 13412.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.000296,
+            "tokens_in": 904,
+            "tokens_out": 267,
+            "duration_ms": 7014.1,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.000118,
+            "tokens_in": 605,
+            "tokens_out": 46,
+            "duration_ms": 1958.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.000229,
+            "tokens_in": 753,
+            "tokens_out": 194,
+            "duration_ms": 4621.2,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.000396,
+            "tokens_in": 1390,
+            "tokens_out": 313,
+            "duration_ms": 8173.3,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.000502,
+            "tokens_in": 1155,
+            "tokens_out": 548,
+            "duration_ms": 11493.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.00082,
+            "tokens_in": 3194,
+            "tokens_out": 568,
+            "duration_ms": 17410.5,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.000873,
+            "tokens_in": 3057,
+            "tokens_out": 691,
+            "duration_ms": 14117.3,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.000602,
+            "tokens_in": 2291,
+            "tokens_out": 430,
+            "duration_ms": 8788.6,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.000568,
+            "tokens_in": 1317,
+            "tokens_out": 618,
+            "duration_ms": 12224.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.000497,
+            "tokens_in": 1295,
+            "tokens_out": 504,
+            "duration_ms": 11506.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.000666,
+            "tokens_in": 1445,
+            "tokens_out": 748,
+            "duration_ms": 13752.3,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": false,
+            "cost": 0.000488,
+            "tokens_in": 1184,
+            "tokens_out": 517,
+            "duration_ms": 11449.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": false,
+            "cost": 0.000568,
+            "tokens_in": 1826,
+            "tokens_out": 490,
+            "duration_ms": 12065.0,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": false,
+            "cost": 0.000856,
+            "tokens_in": 1614,
+            "tokens_out": 1024,
+            "duration_ms": 19219.3,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.000543,
+            "tokens_in": 1329,
+            "tokens_out": 573,
+            "duration_ms": 13858.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": false,
+            "cost": 0.000303,
+            "tokens_in": 922,
+            "tokens_out": 275,
+            "duration_ms": 6804.9,
+            "tool_calls": 1
+          }
+        ]
+      ],
+      "summary": {
+        "pass_rate": 0.6222,
+        "avg_cost_per_run": 0.008419,
+        "total_passes": 28,
+        "total_task_runs": 45
+      }
+    },
+    "gpt-4o-mini+tools": {
+      "model": "gpt-4o-mini",
+      "with_tools": true,
+      "runs": [
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.000118,
+            "tokens_in": 606,
+            "tokens_out": 46,
+            "duration_ms": 1709.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.000216,
+            "tokens_in": 751,
+            "tokens_out": 173,
+            "duration_ms": 4208.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.000311,
+            "tokens_in": 1260,
+            "tokens_out": 203,
+            "duration_ms": 5616.9,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.013654,
+            "tokens_in": 3634,
+            "tokens_out": 524,
+            "duration_ms": 12634.9,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_employee_report_function"
+            ],
+            "generation_cost": 0.012795
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.001372,
+            "tokens_in": 5424,
+            "tokens_out": 930,
+            "duration_ms": 22635.4,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.00116,
+            "tokens_in": 4602,
+            "tokens_out": 783,
+            "duration_ms": 17432.0,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.03268,
+            "tokens_in": 4883,
+            "tokens_out": 488,
+            "duration_ms": 12961.9,
+            "tool_calls": 4,
+            "generation_cost": 0.031655
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.000804,
+            "tokens_in": 3122,
+            "tokens_out": 559,
+            "duration_ms": 19250.6,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.042835,
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "duration_ms": 523533.7,
+            "tool_calls": 0,
+            "generation_cost": 0.042835
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.000933,
+            "tokens_in": 3130,
+            "tokens_out": 773,
+            "duration_ms": 16162.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.047138,
+            "tokens_in": 6894,
+            "tokens_out": 635,
+            "duration_ms": 13555.6,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_workflow_state_machine"
+            ],
+            "generation_cost": 0.045722
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.01405,
+            "tokens_in": 10358,
+            "tokens_out": 515,
+            "duration_ms": 11915.3,
+            "tool_calls": 3,
+            "tools_used": [
+              "generate_thread_safe_classes"
+            ],
+            "generation_cost": 0.012188
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": false,
+            "cost": 0.067134,
+            "tokens_in": 5336,
+            "tokens_out": 1122,
+            "duration_ms": 20455.9,
+            "tool_calls": 1,
+            "generation_cost": 0.06566
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.048237,
+            "tokens_in": 4970,
+            "tokens_out": 565,
+            "duration_ms": 10377.3,
+            "tool_calls": 1,
+            "generation_cost": 0.047152
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.000984,
+            "tokens_in": 4730,
+            "tokens_out": 458,
+            "duration_ms": 17141.5,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.000128,
+            "tokens_in": 604,
+            "tokens_out": 63,
+            "duration_ms": 2140.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.000216,
+            "tokens_in": 750,
+            "tokens_out": 172,
+            "duration_ms": 4215.3,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.000365,
+            "tokens_in": 1352,
+            "tokens_out": 271,
+            "duration_ms": 6337.7,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.015325,
+            "tokens_in": 3822,
+            "tokens_out": 570,
+            "duration_ms": 12595.2,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_employee_report_function"
+            ],
+            "generation_cost": 0.01441
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.001348,
+            "tokens_in": 5490,
+            "tokens_out": 875,
+            "duration_ms": 20461.5,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.001132,
+            "tokens_in": 4684,
+            "tokens_out": 716,
+            "duration_ms": 13687.6,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.021725,
+            "tokens_in": 4376,
+            "tokens_out": 423,
+            "duration_ms": 8275.0,
+            "tool_calls": 4,
+            "generation_cost": 0.020815
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.000813,
+            "tokens_in": 2742,
+            "tokens_out": 670,
+            "duration_ms": 10634.8,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.042205,
+            "tokens_in": 0,
+            "tokens_out": 0,
+            "duration_ms": 1022.4,
+            "tool_calls": 0,
+            "generation_cost": 0.042205
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.000984,
+            "tokens_in": 2891,
+            "tokens_out": 918,
+            "duration_ms": 15684.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.03596,
+            "tokens_in": 6288,
+            "tokens_out": 612,
+            "duration_ms": 10530.2,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_workflow_state_machine"
+            ],
+            "generation_cost": 0.03465
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.012143,
+            "tokens_in": 9284,
+            "tokens_out": 513,
+            "duration_ms": 9623.8,
+            "tool_calls": 3,
+            "tools_used": [
+              "generate_thread_safe_classes"
+            ],
+            "generation_cost": 0.010443
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.029294,
+            "tokens_in": 11157,
+            "tokens_out": 1059,
+            "duration_ms": 18338.6,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_correct_bst"
+            ],
+            "generation_cost": 0.026985
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.047906,
+            "tokens_in": 6234,
+            "tokens_out": 435,
+            "duration_ms": 8023.3,
+            "tool_calls": 1,
+            "generation_cost": 0.04671
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.033035,
+            "tokens_in": 9961,
+            "tokens_out": 310,
+            "duration_ms": 6534.5,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_dependency_resolver"
+            ],
+            "generation_cost": 0.031355
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.000119,
+            "tokens_in": 605,
+            "tokens_out": 47,
+            "duration_ms": 1595.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.000207,
+            "tokens_in": 751,
+            "tokens_out": 158,
+            "duration_ms": 3622.2,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.000315,
+            "tokens_in": 1270,
+            "tokens_out": 207,
+            "duration_ms": 7041.7,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.000483,
+            "tokens_in": 1140,
+            "tokens_out": 520,
+            "duration_ms": 10217.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.001042,
+            "tokens_in": 3352,
+            "tokens_out": 898,
+            "duration_ms": 18995.1,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.000897,
+            "tokens_in": 3080,
+            "tokens_out": 725,
+            "duration_ms": 13735.3,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.014054,
+            "tokens_in": 4965,
+            "tokens_out": 440,
+            "duration_ms": 8870.2,
+            "tool_calls": 5,
+            "tools_used": [
+              "generate_formatter_functions"
+            ],
+            "generation_cost": 0.013045
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.016628,
+            "tokens_in": 4974,
+            "tokens_out": 607,
+            "duration_ms": 13278.6,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_lru_cache"
+            ],
+            "generation_cost": 0.015518
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.051675,
+            "tokens_in": 3009,
+            "tokens_out": 585,
+            "duration_ms": 11141.4,
+            "tool_calls": 1,
+            "generation_cost": 0.050873
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.020943,
+            "tokens_in": 7444,
+            "tokens_out": 773,
+            "duration_ms": 20894.4,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_shape_class_hierarchy"
+            ],
+            "generation_cost": 0.019362
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.018669,
+            "tokens_in": 9026,
+            "tokens_out": 642,
+            "duration_ms": 17544.5,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_state_machine_workflow"
+            ],
+            "generation_cost": 0.01693
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.012632,
+            "tokens_in": 12667,
+            "tokens_out": 465,
+            "duration_ms": 13180.8,
+            "tool_calls": 3,
+            "tools_used": [
+              "generate_thread_safe_classes"
+            ],
+            "generation_cost": 0.010452
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.001609,
+            "tokens_in": 6544,
+            "tokens_out": 1046,
+            "duration_ms": 22777.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.053285,
+            "tokens_in": 6160,
+            "tokens_out": 539,
+            "duration_ms": 12350.9,
+            "tool_calls": 1,
+            "generation_cost": 0.052038
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.013311,
+            "tokens_in": 10198,
+            "tokens_out": 402,
+            "duration_ms": 10761.2,
+            "tool_calls": 2,
+            "tools_used": [
+              "generate_dependency_resolver"
+            ],
+            "generation_cost": 0.01154
+          }
+        ]
+      ],
+      "summary": {
+        "pass_rate": 0.8444,
+        "avg_cost_per_run": 0.240026,
+        "total_passes": 38,
+        "total_task_runs": 45
+      },
+      "pipeline": [
+        {
+          "tools_generated": {
+            "parse_csv_report": "generate_employee_report_function",
+            "cross_file_import": "generate_article_formatter_tools",
+            "state_machine": "generate_workflow_state_machine",
+            "fix_race_condition": "generate_thread_safe_classes"
+          },
+          "cross_task_reuse": [],
+          "total_gen_cost": 0.258008
+        },
+        {
+          "tools_generated": {
+            "parse_csv_report": "generate_employee_report_function",
+            "cross_file_import": "generate_article_formatter_function",
+            "state_machine": "generate_workflow_state_machine",
+            "fix_race_condition": "generate_thread_safe_classes",
+            "tree_operations": "generate_correct_bst",
+            "dependency_resolver": "generate_dependency_resolver"
+          },
+          "cross_task_reuse": [],
+          "total_gen_cost": 0.227573
+        },
+        {
+          "tools_generated": {
+            "cross_file_import": "generate_formatter_functions",
+            "implement_cache": "generate_lru_cache",
+            "class_hierarchy": "generate_shape_class_hierarchy",
+            "state_machine": "generate_state_machine_workflow",
+            "fix_race_condition": "generate_thread_safe_classes",
+            "dependency_resolver": "generate_dependency_resolver"
+          },
+          "cross_task_reuse": [],
+          "total_gen_cost": 0.189758
+        }
+      ]
+    },
+    "gpt-4o": {
+      "model": "gpt-4o",
+      "with_tools": false,
+      "runs": [
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.002027,
+            "tokens_in": 607,
+            "tokens_out": 51,
+            "duration_ms": 1470.2,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.00422,
+            "tokens_in": 728,
+            "tokens_out": 240,
+            "duration_ms": 2841.9,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.0066,
+            "tokens_in": 1388,
+            "tokens_out": 313,
+            "duration_ms": 4206.6,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.007525,
+            "tokens_in": 1138,
+            "tokens_out": 468,
+            "duration_ms": 4591.4,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.019043,
+            "tokens_in": 4681,
+            "tokens_out": 734,
+            "duration_ms": 8422.4,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": false,
+            "cost": 0.03635,
+            "tokens_in": 10448,
+            "tokens_out": 1023,
+            "duration_ms": 15245.9,
+            "tool_calls": 12
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": false,
+            "cost": 0.015297,
+            "tokens_in": 2675,
+            "tokens_out": 861,
+            "duration_ms": 8251.4,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": false,
+            "cost": 0.019342,
+            "tokens_in": 2145,
+            "tokens_out": 1398,
+            "duration_ms": 12413.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.010095,
+            "tokens_in": 1350,
+            "tokens_out": 672,
+            "duration_ms": 6540.2,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.012348,
+            "tokens_in": 1551,
+            "tokens_out": 847,
+            "duration_ms": 5979.2,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.00769,
+            "tokens_in": 1224,
+            "tokens_out": 463,
+            "duration_ms": 4068.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": false,
+            "cost": 0.011558,
+            "tokens_in": 2043,
+            "tokens_out": 645,
+            "duration_ms": 6260.8,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.014283,
+            "tokens_in": 1637,
+            "tokens_out": 1019,
+            "duration_ms": 8852.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": false,
+            "cost": 0.008445,
+            "tokens_in": 1270,
+            "tokens_out": 527,
+            "duration_ms": 6305.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": false,
+            "cost": 0.007863,
+            "tokens_in": 1081,
+            "tokens_out": 516,
+            "duration_ms": 6991.1,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.002233,
+            "tokens_in": 605,
+            "tokens_out": 72,
+            "duration_ms": 1726.3,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.003137,
+            "tokens_in": 727,
+            "tokens_out": 132,
+            "duration_ms": 2019.4,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.006723,
+            "tokens_in": 1381,
+            "tokens_out": 327,
+            "duration_ms": 4298.2,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.007925,
+            "tokens_in": 1150,
+            "tokens_out": 505,
+            "duration_ms": 4833.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.01404,
+            "tokens_in": 3040,
+            "tokens_out": 644,
+            "duration_ms": 7191.1,
+            "tool_calls": 3
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": false,
+            "cost": 0.015503,
+            "tokens_in": 3029,
+            "tokens_out": 793,
+            "duration_ms": 11465.2,
+            "tool_calls": 6
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": false,
+            "cost": 0.014333,
+            "tokens_in": 2653,
+            "tokens_out": 770,
+            "duration_ms": 7665.3,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.017293,
+            "tokens_in": 1949,
+            "tokens_out": 1242,
+            "duration_ms": 10334.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.01028,
+            "tokens_in": 1380,
+            "tokens_out": 683,
+            "duration_ms": 5052.8,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.012483,
+            "tokens_in": 1553,
+            "tokens_out": 860,
+            "duration_ms": 5292.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.0103,
+            "tokens_in": 1348,
+            "tokens_out": 693,
+            "duration_ms": 5985.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": false,
+            "cost": 0.010483,
+            "tokens_in": 1985,
+            "tokens_out": 552,
+            "duration_ms": 7718.7,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.015728,
+            "tokens_in": 1719,
+            "tokens_out": 1143,
+            "duration_ms": 8311.8,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": true,
+            "cost": 0.010395,
+            "tokens_in": 1334,
+            "tokens_out": 706,
+            "duration_ms": 8489.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": false,
+            "cost": 0.008765,
+            "tokens_in": 1186,
+            "tokens_out": 580,
+            "duration_ms": 6822.0,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.00199,
+            "tokens_in": 604,
+            "tokens_out": 48,
+            "duration_ms": 1416.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.003145,
+            "tokens_in": 730,
+            "tokens_out": 132,
+            "duration_ms": 2302.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.013873,
+            "tokens_in": 3321,
+            "tokens_out": 557,
+            "duration_ms": 7887.9,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.007323,
+            "tokens_in": 1145,
+            "tokens_out": 446,
+            "duration_ms": 4781.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.018625,
+            "tokens_in": 4602,
+            "tokens_out": 712,
+            "duration_ms": 10642.0,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.068873,
+            "tokens_in": 18721,
+            "tokens_out": 2207,
+            "duration_ms": 22670.4,
+            "tool_calls": 16
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": false,
+            "cost": 0.016738,
+            "tokens_in": 3159,
+            "tokens_out": 884,
+            "duration_ms": 8406.3,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": false,
+            "cost": 0.017355,
+            "tokens_in": 1938,
+            "tokens_out": 1251,
+            "duration_ms": 11249.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.010173,
+            "tokens_in": 1357,
+            "tokens_out": 678,
+            "duration_ms": 5990.2,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.011902,
+            "tokens_in": 1485,
+            "tokens_out": 819,
+            "duration_ms": 5785.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.011265,
+            "tokens_in": 2342,
+            "tokens_out": 541,
+            "duration_ms": 4563.7,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": false,
+            "cost": 0.046508,
+            "tokens_in": 10739,
+            "tokens_out": 1966,
+            "duration_ms": 77292.1,
+            "tool_calls": 6
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.018165,
+            "tokens_in": 2974,
+            "tokens_out": 1073,
+            "duration_ms": 9607.8,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": true,
+            "cost": 0.036358,
+            "tokens_in": 9747,
+            "tokens_out": 1199,
+            "duration_ms": 14066.1,
+            "tool_calls": 8
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": false,
+            "cost": 0.00946,
+            "tokens_in": 1232,
+            "tokens_out": 638,
+            "duration_ms": 7647.0,
+            "tool_calls": 1
+          }
+        ]
+      ],
+      "summary": {
+        "pass_rate": 0.6222,
+        "avg_cost_per_run": 0.211351,
+        "total_passes": 28,
+        "total_task_runs": 45
+      }
+    },
+    "gpt-5.2-2025-12-11": {
+      "model": "gpt-5.2-2025-12-11",
+      "with_tools": false,
+      "runs": [
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.003215,
+            "tokens_in": 1261,
+            "tokens_out": 72,
+            "duration_ms": 3189.4,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.005505,
+            "tokens_in": 1010,
+            "tokens_out": 267,
+            "duration_ms": 5303.0,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.011218,
+            "tokens_in": 3666,
+            "tokens_out": 343,
+            "duration_ms": 8964.7,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.012593,
+            "tokens_in": 1524,
+            "tokens_out": 709,
+            "duration_ms": 13123.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.022171,
+            "tokens_in": 7829,
+            "tokens_out": 605,
+            "duration_ms": 12182.2,
+            "tool_calls": 6
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.024157,
+            "tokens_in": 7484,
+            "tokens_out": 790,
+            "duration_ms": 13520.3,
+            "tool_calls": 8
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.025352,
+            "tokens_in": 6799,
+            "tokens_out": 961,
+            "duration_ms": 17718.2,
+            "tool_calls": 7
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.03394,
+            "tokens_in": 7578,
+            "tokens_out": 1477,
+            "duration_ms": 26386.6,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.015808,
+            "tokens_in": 1841,
+            "tokens_out": 899,
+            "duration_ms": 13323.9,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.02083,
+            "tokens_in": 2095,
+            "tokens_out": 1226,
+            "duration_ms": 17877.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.009291,
+            "tokens_in": 1389,
+            "tokens_out": 490,
+            "duration_ms": 9296.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.021241,
+            "tokens_in": 6450,
+            "tokens_out": 711,
+            "duration_ms": 16114.6,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.017892,
+            "tokens_in": 1856,
+            "tokens_out": 1046,
+            "duration_ms": 18614.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": true,
+            "cost": 0.02233,
+            "tokens_in": 2192,
+            "tokens_out": 1321,
+            "duration_ms": 23314.4,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.009984,
+            "tokens_in": 1329,
+            "tokens_out": 547,
+            "duration_ms": 10807.8,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.003218,
+            "tokens_in": 1263,
+            "tokens_out": 72,
+            "duration_ms": 3686.1,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.007633,
+            "tokens_in": 1762,
+            "tokens_out": 325,
+            "duration_ms": 7059.1,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.011414,
+            "tokens_in": 3658,
+            "tokens_out": 358,
+            "duration_ms": 9398.4,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.013249,
+            "tokens_in": 1563,
+            "tokens_out": 751,
+            "duration_ms": 12085.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.019357,
+            "tokens_in": 6117,
+            "tokens_out": 618,
+            "duration_ms": 13128.1,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.023765,
+            "tokens_in": 7476,
+            "tokens_out": 763,
+            "duration_ms": 13849.8,
+            "tool_calls": 8
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.02233,
+            "tokens_in": 6312,
+            "tokens_out": 806,
+            "duration_ms": 15426.2,
+            "tool_calls": 7
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.030721,
+            "tokens_in": 8267,
+            "tokens_out": 1161,
+            "duration_ms": 20841.6,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.01553,
+            "tokens_in": 1834,
+            "tokens_out": 880,
+            "duration_ms": 17447.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.019948,
+            "tokens_in": 2031,
+            "tokens_out": 1171,
+            "duration_ms": 17674.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.009226,
+            "tokens_in": 1376,
+            "tokens_out": 487,
+            "duration_ms": 8697.4,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.021018,
+            "tokens_in": 6426,
+            "tokens_out": 698,
+            "duration_ms": 16422.7,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.025126,
+            "tokens_in": 3782,
+            "tokens_out": 1322,
+            "duration_ms": 24055.9,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": true,
+            "cost": 0.019575,
+            "tokens_in": 1994,
+            "tokens_out": 1149,
+            "duration_ms": 20896.1,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.012589,
+            "tokens_in": 1506,
+            "tokens_out": 711,
+            "duration_ms": 12915.2,
+            "tool_calls": 1
+          }
+        ],
+        [
+          {
+            "task_id": "hello_world",
+            "passed": true,
+            "cost": 0.004414,
+            "tokens_in": 1786,
+            "tokens_out": 92,
+            "duration_ms": 4137.8,
+            "tool_calls": 3
+          },
+          {
+            "task_id": "fibonacci",
+            "passed": true,
+            "cost": 0.007665,
+            "tokens_in": 996,
+            "tokens_out": 423,
+            "duration_ms": 6689.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_the_bug",
+            "passed": true,
+            "cost": 0.011186,
+            "tokens_in": 3656,
+            "tokens_out": 342,
+            "duration_ms": 8617.6,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "parse_csv_report",
+            "passed": true,
+            "cost": 0.013317,
+            "tokens_in": 1570,
+            "tokens_out": 755,
+            "duration_ms": 11724.6,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "debug_stack_trace",
+            "passed": true,
+            "cost": 0.018708,
+            "tokens_in": 6106,
+            "tokens_out": 573,
+            "duration_ms": 11175.9,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "multi_file_refactor",
+            "passed": true,
+            "cost": 0.02408,
+            "tokens_in": 7480,
+            "tokens_out": 785,
+            "duration_ms": 14949.0,
+            "tool_calls": 8
+          },
+          {
+            "task_id": "cross_file_import",
+            "passed": true,
+            "cost": 0.025398,
+            "tokens_in": 6793,
+            "tokens_out": 965,
+            "duration_ms": 20351.0,
+            "tool_calls": 7
+          },
+          {
+            "task_id": "implement_cache",
+            "passed": true,
+            "cost": 0.028826,
+            "tokens_in": 6960,
+            "tokens_out": 1189,
+            "duration_ms": 20316.0,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "rest_api_client",
+            "passed": false,
+            "cost": 0.01761,
+            "tokens_in": 1951,
+            "tokens_out": 1014,
+            "duration_ms": 17711.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "class_hierarchy",
+            "passed": true,
+            "cost": 0.026623,
+            "tokens_in": 3933,
+            "tokens_out": 1410,
+            "duration_ms": 23565.5,
+            "tool_calls": 2
+          },
+          {
+            "task_id": "state_machine",
+            "passed": true,
+            "cost": 0.009588,
+            "tokens_in": 1399,
+            "tokens_out": 510,
+            "duration_ms": 8547.7,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "fix_race_condition",
+            "passed": true,
+            "cost": 0.021217,
+            "tokens_in": 6420,
+            "tokens_out": 713,
+            "duration_ms": 17281.1,
+            "tool_calls": 5
+          },
+          {
+            "task_id": "tree_operations",
+            "passed": true,
+            "cost": 0.027265,
+            "tokens_in": 6492,
+            "tokens_out": 1136,
+            "duration_ms": 19878.0,
+            "tool_calls": 4
+          },
+          {
+            "task_id": "cli_parser",
+            "passed": true,
+            "cost": 0.026518,
+            "tokens_in": 2481,
+            "tokens_out": 1584,
+            "duration_ms": 27274.5,
+            "tool_calls": 1
+          },
+          {
+            "task_id": "dependency_resolver",
+            "passed": true,
+            "cost": 0.011818,
+            "tokens_in": 1457,
+            "tokens_out": 662,
+            "duration_ms": 10956.8,
+            "tool_calls": 1
+          }
+        ]
+      ],
+      "summary": {
+        "pass_rate": 0.9333,
+        "avg_cost_per_run": 0.261486,
+        "total_passes": 42,
+        "total_task_runs": 45
+      }
+    }
+  }
+}

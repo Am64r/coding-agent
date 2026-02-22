@@ -34,6 +34,7 @@ COST_PER_1K = {
     "gpt-4.1-nano": {"input": 0.0001, "output": 0.0004},
     "o3-mini": {"input": 0.0011, "output": 0.0044},
     "gpt-5.2": {"input": 0.00175, "output": 0.014},
+    "gpt-5.2-2025-12-11": {"input": 0.00175, "output": 0.014},
     "gpt-5.2-thinking": {"input": 0.00175, "output": 0.014},
 }
 
@@ -50,6 +51,8 @@ class TaskResult:
     input_tokens: int = 0
     output_tokens: int = 0
     error: Optional[str] = None
+    extra_cost: float = 0.0
+    tools_used: list[str] = field(default_factory=list)
 
     @property
     def num_tool_calls(self) -> int:
@@ -58,4 +61,5 @@ class TaskResult:
     @property
     def estimated_cost(self) -> float:
         rates = COST_PER_1K.get(self.model, {"input": 0.0, "output": 0.0})
-        return (self.input_tokens / 1000) * rates["input"] + (self.output_tokens / 1000) * rates["output"]
+        base = (self.input_tokens / 1000) * rates["input"] + (self.output_tokens / 1000) * rates["output"]
+        return base + self.extra_cost

@@ -28,11 +28,23 @@ Work step by step:
 2. Check if any of your specialized tools can generate the code you need
 3. If so, call the tool, then write the result to a file
 4. If not, write the code yourself
-When the task is complete, give a clear summary of what you did without calling any more tools.\
+When the task is complete, give a clear summary of what you did without calling any more tools.
+{tool_examples}\
 """
 
 
-def _validate_tool_code(code):
+def _build_tool_examples_section(usage_examples):
+    if not usage_examples:
+        return ""
+    lines = ["\n## Specialized Tool Usage Examples\n"]
+    for name, example in usage_examples.items():
+        lines.append(f"### {name}")
+        lines.append(example.strip())
+        lines.append("")
+    return "\n".join(lines)
+
+
+def _validate_tool_code(code, verbose=True):
     namespace = {}
     try:
         exec(code, namespace)
@@ -53,12 +65,16 @@ def _validate_tool_code(code):
     if not callable(namespace[func_name]):
         return False, f"'{func_name}' is not callable"
 
+    if "USAGE_EXAMPLE" not in namespace and verbose:
+        print(f"  Warning: tool '{func_name}' missing USAGE_EXAMPLE (recommended for agent discoverability)")
+
     return True, func_name
 
 
 def _run_with_library_tools(task, model, verbose):
     client = OpenAIClient(model=model)
     lib_schemas, lib_handlers = tool_library.load_tools()
+    usage_examples = tool_library.load_tool_usage_examples()
 
     workspace = Path(tempfile.mkdtemp(prefix=f"eval_{task.id}_"))
     trajectory = []
@@ -85,7 +101,11 @@ def _run_with_library_tools(task, model, verbose):
             ))
             return result
 
-        system_prompt = AUGMENTED_SYSTEM_PROMPT if lib_schemas else None
+        if lib_schemas:
+            tool_examples = _build_tool_examples_section(usage_examples)
+            system_prompt = AUGMENTED_SYSTEM_PROMPT.format(tool_examples=tool_examples)
+        else:
+            system_prompt = None
 
         agent = Agent(
             client=client,
@@ -171,12 +191,15 @@ def run_pipeline(
         if verbose:
             print(f"\n--- Generation attempt {attempt}/{max_attempts} ---")
 
+        existing_tools = tool_library.load_tool_summaries()
+
         tool_code, gen_in, gen_out = generate_tool(
             task_prompt=task.prompt,
             trajectory=initial_result.trajectory,
             verify_message=initial_result.verify_message,
             model=sota_model,
             retry_info=retry_info,
+            existing_tools=existing_tools,
         )
         gen_costs["input_tokens"] += gen_in
         gen_costs["output_tokens"] += gen_out
@@ -184,7 +207,7 @@ def run_pipeline(
         if verbose:
             print(f"Generated tool ({gen_in + gen_out:,} tokens)")
 
-        valid, result = _validate_tool_code(tool_code)
+        valid, result = _validate_tool_code(tool_code, verbose=verbose)
         if not valid:
             if verbose:
                 print(f"  Invalid tool: {result}")

@@ -193,24 +193,86 @@ class EvalHarness:
     @staticmethod
     def compare(runs: dict[str, list[TaskResult]]):
         task_ids = [r.task_id for r in next(iter(runs.values()))]
-        header = f"{'task':<25}" + "".join(f"{'':>3}{m:<18}" for m in runs)
-        print(f"\n{'='*len(header)}")
+        col_w = max(len(c) for c in runs) + 4
+        col_w = max(col_w, 18)
+        header = f"{'task':<25}" + "".join(f"{c:>{col_w}}" for c in runs)
+        sep = "-" * len(header)
+        print(f"\n{'=' * len(header)}")
         print(header)
-        print(f"{'-'*len(header)}")
+        print(sep)
 
         for tid in task_ids:
             row = f"{tid:<25}"
-            for model, results in runs.items():
+            for config, results in runs.items():
                 r = next(r for r in results if r.task_id == tid)
                 status = "PASS" if r.passed else "FAIL"
-                row += f"   {status}  ${r.estimated_cost:.4f}      "
+                cell = f"{status} ${r.estimated_cost:.4f}"
+                row += f"{cell:>{col_w}}"
             print(row)
 
-        print(f"{'-'*len(header)}")
-        summary = f"{'TOTAL':<25}"
-        for model, results in runs.items():
+        print(sep)
+        row = f"{'TOTAL':<25}"
+        for config, results in runs.items():
             p = sum(1 for r in results if r.passed)
             cost = sum(r.estimated_cost for r in results)
-            summary += f"   {p}/{len(results)}   ${cost:.4f}      "
-        print(summary)
-        print(f"{'='*len(header)}")
+            cell = f"{p}/{len(results)} ${cost:.4f}"
+            row += f"{cell:>{col_w}}"
+        print(row)
+        print(f"{'=' * len(header)}")
+
+    @staticmethod
+    def compare_multi_run(all_runs: dict[str, list[list[TaskResult]]]):
+        first_config = next(iter(all_runs.values()))
+        task_ids = [r.task_id for r in first_config[0]]
+        num_runs = len(first_config)
+
+        col_w = max(len(c) for c in all_runs) + 4
+        col_w = max(col_w, 18)
+        header = f"{'task':<25}" + "".join(f"{c:>{col_w}}" for c in all_runs)
+        sep = "-" * len(header)
+
+        print(f"\n{'=' * len(header)}")
+        print(f"Benchmark: {num_runs} runs per config, {len(task_ids)} tasks")
+        print(f"{'=' * len(header)}")
+        print(header)
+        print(sep)
+
+        for tid in task_ids:
+            row = f"{tid:<25}"
+            for config, run_list in all_runs.items():
+                passes = 0
+                total_cost = 0.0
+                for run_results in run_list:
+                    r = next(r for r in run_results if r.task_id == tid)
+                    if r.passed:
+                        passes += 1
+                    total_cost += r.estimated_cost
+                avg_cost = total_cost / len(run_list)
+                cell = f"{passes}/{len(run_list)} ${avg_cost:.4f}"
+                row += f"{cell:>{col_w}}"
+            print(row)
+
+        print(sep)
+
+        row = f"{'PASS RATE':<25}"
+        for config, run_list in all_runs.items():
+            total_passes = sum(
+                1 for run_results in run_list for r in run_results if r.passed
+            )
+            total_tasks = sum(len(run_results) for run_results in run_list)
+            rate = total_passes / total_tasks if total_tasks else 0
+            cell = f"{100 * rate:.1f}%"
+            row += f"{cell:>{col_w}}"
+        print(row)
+
+        row = f"{'AVG COST/RUN':<25}"
+        for config, run_list in all_runs.items():
+            total_cost = sum(
+                r.estimated_cost for run_results in run_list for r in run_results
+            )
+            avg = total_cost / len(run_list) if run_list else 0
+            cell = f"${avg:.4f}"
+            row += f"{cell:>{col_w}}"
+        print(row)
+
+        print(f"{'=' * len(header)}")
