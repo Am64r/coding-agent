@@ -7,6 +7,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "agent_loop"))
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent.parent / ".env")
 
+from .check_openai_key import check_openai_key
+if not check_openai_key():
+    sys.exit("OPENAI_API_KEY is not available. Set it in .env or as an environment variable (e.g. GitHub secret).")
+
 from agent import OpenAIClient
 from .harness import EvalHarness
 from .tasks import ALL_TASKS, TASK_MAP
