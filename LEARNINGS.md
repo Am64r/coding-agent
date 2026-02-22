@@ -1,21 +1,43 @@
 # Agent Engineering — Learnings
 
+## Project Vision
+
+Building a coding agent that dynamically generates task-specific tools, uses them, and accumulates a reusable tool library. The core thesis: **a cheap model + a library of purpose-built tools can match or beat a SOTA model without tools**, at a fraction of the cost.
+
+The tool library is generated once (by a strong model or the agent itself), eval-verified, then reused across future tasks. The moat is the library — not the model.
+
+**Planned modules:**
+```
+agent_loop/    # ReAct loop, tool calling, model-agnostic LLM client  ✓ done
+evals/         # Eval harness, trajectory recording, hidden verifiers  ✓ done
+context/       # Context management and file retrieval
+memory/        # In-context, external, and episodic memory + tool library
+multiagent/    # Orchestrator/subagent pattern (tool generator + tool user)
+local_model/   # vLLM deployment on H100, model comparison benchmark
+```
+
+**The benchmark goal:** Run the same task suite on (A) cheap model alone, (B) SOTA model alone, (C) cheap model + generated tool library. Prove C ≥ B at lower cost.
+
+**Next up:** Add cost/token tracking to `TaskResult` and `EvalHarness`, multi-model comparison support, and a harder task suite where cheap models fail ~40-60% without tools.
+
+---
+
 ## Module 1: Agent Loop
 
 ### What We Built
 A minimal ReAct agent using OpenAI function calling with three files:
-- `agent_loop/tools.py` — tool definitions and implementations
+- `agent_loop/tools/` — tool definitions and implementations (each tool is its own file)
 - `agent_loop/agent.py` — LLM client abstraction and ReAct loop
 - `agent_loop/main.py` — interactive CLI entry point
 
 ### Architecture
 
-**Tools** (`tools.py`):
-- `read_file(path)` — reads from sandboxed workspace
-- `write_file(path, content)` — writes to workspace, creates parent dirs
-- `run_shell(command)` — executes shell commands in workspace, 30s timeout
+**Tools** (`tools/`):
+- Each tool is its own file (`read_file.py`, `write_file.py`, `run_shell.py`), each exporting a `SCHEMA` dict and an implementation function
+- `tools/_workspace.py` — shared `WORKSPACE` path and `resolve(path)` helper
+- `tools/__init__.py` — aggregates `TOOL_SCHEMAS` list and `dispatch(name, args)` from all tool files
 - All tools operate within `agent/created_files/`
-- `dispatch(name, args)` routes tool calls by name
+- Adding a new tool = drop a file in `tools/`, register in `__init__.py`
 
 **LLM Client** (`agent.py`):
 - Abstract `LLMClient` base class with `chat(messages, tools) -> AgentResponse`
@@ -81,3 +103,20 @@ python3 -m evals.run --task hello_world
 python3 -m evals.run --all
 python3 -m evals.run --all --quiet   # suppress per-step output
 ```
+
+### What's Missing (Next Steps for Module 2)
+
+1. **Cost/token tracking** — `TaskResult` needs `input_tokens`, `output_tokens`, `estimated_cost`. The OpenAI response already returns usage data, just not captured yet. Required to make the economic argument measurable.
+
+2. **Multi-model comparison** — `EvalHarness` should accept a list of models, run the same suite on each, and output a side-by-side comparison table (pass rate + cost per model).
+
+3. **Harder task suite** — Current tasks (hello_world, fibonacci, fix_the_bug) are too easy for any model. Need 10-15 tasks where cheap models fail 40-60% without tools:
+   - Multi-file codebase understanding before editing
+   - Debugging from a stack trace
+   - Refactoring without breaking existing tests
+   - Cross-file dependency reasoning
+   - Performance-constrained implementation
+
+4. **Tool library integration** — Once built (module 3b/memory), the harness needs a mode where it loads a pre-built tool library into the agent before running tasks. This enables the A/B/C comparison.
+
+---
