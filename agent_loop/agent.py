@@ -5,7 +5,7 @@ from typing import Optional
 
 from openai import OpenAI
 
-from tools import TOOL_SCHEMAS, dispatch
+from tools import TOOL_SCHEMAS, dispatch as _default_dispatch
 
 SYSTEM_PROMPT = """\
 You are a coding agent. You have tools to read files, write files, and run shell commands.
@@ -81,10 +81,19 @@ class OpenAIClient(LLMClient):
 
 
 class Agent:
-    def __init__(self, client: LLMClient, max_iterations: int = 20, verbose: bool = True):
+    def __init__(
+        self,
+        client: LLMClient,
+        max_iterations: int = 20,
+        verbose: bool = True,
+        tools: list = None,
+        dispatch_fn: callable = None,
+    ):
         self.client = client
         self.max_iterations = max_iterations
         self.verbose = verbose
+        self.tools = tools if tools is not None else TOOL_SCHEMAS
+        self.dispatch_fn = dispatch_fn or _default_dispatch
 
     def run(self, task: str) -> str:
         messages = [
@@ -93,7 +102,7 @@ class Agent:
         ]
 
         for iteration in range(self.max_iterations):
-            response = self.client.chat(messages, tools=TOOL_SCHEMAS)
+            response = self.client.chat(messages, tools=self.tools)
             messages.append(response.raw_message)
 
             if not response.tool_calls:
@@ -103,7 +112,7 @@ class Agent:
                 if self.verbose:
                     print(f"  [{iteration + 1}] {tc.name}({json.dumps(tc.args)})")
 
-                result = dispatch(tc.name, tc.args)
+                result = self.dispatch_fn(tc.name, tc.args)
 
                 if self.verbose:
                     preview = result[:300] + "..." if len(result) > 300 else result
