@@ -24,7 +24,8 @@ def main():
 
         print()
         result = agent.run(task)
-        print(f"\nDone: {result}\n")
+        print(f"\nDone: {result.content}\n")
+        print(f"  tokens: {result.input_tokens:,} in / {result.output_tokens:,} out")
         print("-" * 60 + "\n")
 
 
