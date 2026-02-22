@@ -119,16 +119,18 @@ class Agent:
         verbose: bool = True,
         tools: list = None,
         dispatch_fn: callable = None,
+        system_prompt: str = None,
     ):
         self.client = client
         self.max_iterations = max_iterations
         self.verbose = verbose
         self.tools = tools if tools is not None else TOOL_SCHEMAS
         self.dispatch_fn = dispatch_fn or _default_dispatch
+        self.system_prompt = system_prompt or SYSTEM_PROMPT
 
     def run(self, task: str) -> "AgentResult":
         messages = [
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": task}
         ]
 

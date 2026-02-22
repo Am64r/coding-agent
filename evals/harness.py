@@ -67,10 +67,13 @@ def _build_toolbox(workspace: Path):
 
 
 class EvalHarness:
-    def __init__(self, client: LLMClient, verbose: bool = True, model_name: str = ""):
+    def __init__(self, client: LLMClient, verbose: bool = True, model_name: str = "",
+                 extra_tools: tuple = None, system_prompt: str = None):
         self.client = client
         self.verbose = verbose
         self.model_name = model_name
+        self.extra_tools = extra_tools
+        self.system_prompt = system_prompt
 
     def run_task(self, task: EvalTask) -> TaskResult:
         workspace = Path(tempfile.mkdtemp(prefix=f"eval_{task.id}_"))
@@ -81,9 +84,24 @@ class EvalHarness:
 
             schemas, base_dispatch = _build_toolbox(workspace)
 
+            if self.extra_tools:
+                extra_schemas, extra_handlers = self.extra_tools
+                schemas = schemas + extra_schemas
+
+                def merged_dispatch(name: str, args: dict) -> str:
+                    if name in extra_handlers:
+                        try:
+                            return str(extra_handlers[name](**args))
+                        except Exception as e:
+                            return f"Error: {e}"
+                    return base_dispatch(name, args)
+                dispatch_fn = merged_dispatch
+            else:
+                dispatch_fn = base_dispatch
+
             def recording_dispatch(name: str, args: dict) -> str:
                 t0 = time.monotonic()
-                result = base_dispatch(name, args)
+                result = dispatch_fn(name, args)
                 trajectory.append(ToolCallRecord(
                     name=name,
                     args=args,
@@ -97,6 +115,7 @@ class EvalHarness:
                 tools=schemas,
                 dispatch_fn=recording_dispatch,
                 verbose=self.verbose,
+                system_prompt=self.system_prompt,
             )
 
             if self.verbose:
