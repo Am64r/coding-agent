@@ -13,6 +13,8 @@ from agent import OpenAIClient
 from .harness import EvalHarness
 from .tasks import ALL_TASKS, TASK_MAP
 from .task import EvalTask, TaskResult, COST_PER_1K
+from .command_runner import HostCommandRunner, DockerCommandRunner, build_docker_image
+from .verifier import set_command_runner
 import tool_library
 from tool_gen.generator import generate_tool
 from tool_gen.pipeline import _validate_tool_code
@@ -35,6 +37,10 @@ Work step by step:
 When the task is complete, give a clear summary of what you did without calling any more tools.
 {tool_examples}\
 """
+
+DEFAULT_DOCKER_IMAGE = "coding-agent-evals:latest"
+DEFAULT_DOCKERFILE = Path(__file__).parent / "Dockerfile.benchmark"
+DOCKER_SMOKE_TASK_IDS = ["hello_world", "rest_api_client", "fix_race_condition"]
 
 
 def _build_tool_examples_section(usage_examples):
@@ -59,6 +65,55 @@ def _generation_cost(model, input_tokens, output_tokens):
     return (input_tokens / 1000) * rates["input"] + (output_tokens / 1000) * rates["output"]
 
 
+def _extract_agent_observable_signals(task_result, max_chars=3000):
+    lines = []
+    for tc in task_result.trajectory:
+        if tc.name != "run_shell":
+            continue
+        output = tc.result or ""
+        if any(token in output for token in ("Traceback", "AssertionError", "FAILED", "Error:", "Exit code:")):
+            cmd = tc.args.get("command", "") if isinstance(tc.args, dict) else ""
+            lines.append(f"$ {cmd}\n{output[:800]}")
+    if not lines:
+        return "No explicit self-test failure logs were observed in run_shell outputs."
+    content = "\n\n".join(lines[-4:])
+    return content[:max_chars]
+
+
+def _generation_feedback(task_result, allow_verifier_feedback):
+    if allow_verifier_feedback:
+        return task_result.verify_message
+    runtime_error = f"\nAgent runtime error: {task_result.error}" if task_result.error else ""
+    signals = _extract_agent_observable_signals(task_result)
+    return (
+        "Hidden verifier result: FAIL.\n"
+        "Do not assume access to hidden tests. Infer likely failure modes from the agent's own actions.\n"
+        f"{runtime_error}\n\n"
+        "Agent-observable signals:\n"
+        f"{signals}"
+    )
+
+
+def _serialize_trajectory(trajectory):
+    return [
+        {
+            "name": tc.name,
+            "args": tc.args,
+            "result": tc.result,
+            "duration_ms": round(tc.duration_ms, 3),
+        }
+        for tc in trajectory
+    ]
+
+
+def _append_jsonl(log_path, payload):
+    if not log_path:
+        return
+    record = {"ts": datetime.now().isoformat(), **payload}
+    with Path(log_path).open("a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
+
+
 def _load_current_tools():
     lib_schemas, lib_handlers = tool_library.load_tools()
     if not lib_schemas:
@@ -69,17 +124,22 @@ def _load_current_tools():
     return (lib_schemas, lib_handlers), prompt, set(lib_handlers.keys())
 
 
-def _make_harness(model, verbose, extra_tools=None, system_prompt=None):
+def _make_harness(model, verbose, extra_tools=None, system_prompt=None, command_runner=None):
     return EvalHarness(
         client=OpenAIClient(model=model),
         verbose=verbose,
         model_name=model,
         extra_tools=extra_tools,
         system_prompt=system_prompt,
+        command_runner=command_runner,
     )
 
 
-def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempts=3):
+def _run_self_improving(
+    tasks, cheap_model, sota_model, verbose, command_runner,
+    max_gen_attempts=3, allow_verifier_feedback=False, log_path=None,
+    config_name=None, run_index=None
+):
     """Run all tasks through the self-improving pipeline.
 
     Per task: run cheap model with accumulated library tools. On failure,
@@ -103,9 +163,27 @@ def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempt
             print(f"[{i}/{len(tasks)}] {task.id}...", end=" ", flush=True)
 
         extra_tools, sys_prompt, lib_names = _load_current_tools()
-        harness = _make_harness(cheap_model, verbose, extra_tools, sys_prompt)
+        harness = _make_harness(
+            cheap_model, verbose, extra_tools, sys_prompt, command_runner=command_runner
+        )
         result = harness.run_task(task)
         result.tools_used = [tc.name for tc in result.trajectory if tc.name in lib_names]
+        sent_feedback = None if result.passed else _generation_feedback(result, allow_verifier_feedback)
+        _append_jsonl(log_path, {
+            "event": "task_initial_result",
+            "config": config_name,
+            "run_index": run_index,
+            "task_index": i,
+            "task_id": task.id,
+            "model": cheap_model,
+            "passed": result.passed,
+            "verify_message": result.verify_message,
+            "feedback_sent_to_generator": sent_feedback,
+            "trajectory": _serialize_trajectory(result.trajectory),
+            "tools_available": sorted(lib_names),
+            "tools_used": result.tools_used,
+            "cost": result.estimated_cost,
+        })
 
         for tn in result.tools_used:
             src = meta["tool_sources"].get(tn)
@@ -132,15 +210,24 @@ def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempt
                 print(f"\n  [tool_gen] attempt {attempt}/{max_gen_attempts} for {task.id}")
 
             try:
+                current_feedback = _generation_feedback(result, allow_verifier_feedback)
                 tool_code, gen_in, gen_out = generate_tool(
                     task_prompt=task.prompt,
                     trajectory=result.trajectory,
-                    verify_message=result.verify_message,
+                    verify_message=current_feedback,
                     model=sota_model,
                     retry_info=retry_info,
                     existing_tools=tool_library.load_tool_summaries(),
                 )
             except Exception as e:
+                _append_jsonl(log_path, {
+                    "event": "generation_error",
+                    "config": config_name,
+                    "run_index": run_index,
+                    "task_id": task.id,
+                    "attempt": attempt,
+                    "error": str(e),
+                })
                 if verbose:
                     print(f"  [tool_gen] generation error: {e}")
                 continue
@@ -148,6 +235,20 @@ def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempt
             task_gen_cost += _generation_cost(sota_model, gen_in, gen_out)
 
             valid, name_or_err = _validate_tool_code(tool_code, verbose=verbose)
+            _append_jsonl(log_path, {
+                "event": "generation_attempt",
+                "config": config_name,
+                "run_index": run_index,
+                "task_id": task.id,
+                "attempt": attempt,
+                "model": sota_model,
+                "tokens_in": gen_in,
+                "tokens_out": gen_out,
+                "feedback_sent_to_generator": current_feedback,
+                "tool_code": tool_code,
+                "validation_passed": valid,
+                "validation_result": name_or_err,
+            })
             if not valid:
                 if verbose:
                     print(f"  [tool_gen] invalid: {name_or_err}")
@@ -163,7 +264,9 @@ def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempt
             )
 
             et, sp, ln = _load_current_tools()
-            harness2 = _make_harness(cheap_model, verbose, et, sp)
+            harness2 = _make_harness(
+                cheap_model, verbose, et, sp, command_runner=command_runner
+            )
 
             if not verbose:
                 print("retry...", end=" ", flush=True)
@@ -173,6 +276,22 @@ def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempt
             retry_result = harness2.run_task(task)
             retry_result.tools_used = [tc.name for tc in retry_result.trajectory if tc.name in ln]
             retry_result.extra_cost = task_gen_cost
+            _append_jsonl(log_path, {
+                "event": "generation_retry_result",
+                "config": config_name,
+                "run_index": run_index,
+                "task_id": task.id,
+                "attempt": attempt,
+                "tool_name": tool_name,
+                "passed": retry_result.passed,
+                "verify_message": retry_result.verify_message,
+                "feedback_sent_to_generator_next_attempt": _generation_feedback(
+                    retry_result, allow_verifier_feedback
+                ),
+                "trajectory": _serialize_trajectory(retry_result.trajectory),
+                "tools_used": retry_result.tools_used,
+                "cost": retry_result.estimated_cost,
+            })
 
             if retry_result.passed:
                 meta["tools_generated"][task.id] = tool_name
@@ -181,7 +300,10 @@ def _run_self_improving(tasks, cheap_model, sota_model, verbose, max_gen_attempt
                 success = True
                 break
             else:
-                retry_info = {"tool_name": tool_name, "verify_message": retry_result.verify_message}
+                retry_info = {
+                    "tool_name": tool_name,
+                    "verify_message": _generation_feedback(retry_result, allow_verifier_feedback),
+                }
                 tool_library.remove_tool(tool_name)
 
         if not success:
@@ -315,10 +437,45 @@ def main():
                         help="Save benchmark results to JSON file")
     parser.add_argument("--sota-model", default="gpt-4o",
                         help="SOTA model for tool generation in +tools configs (default: gpt-4o)")
+    parser.add_argument("--allow-verifier-feedback", action="store_true",
+                        help="Allow tool generation to see raw hidden verifier output (default: off)")
+    parser.add_argument("--benchmark-log", metavar="PATH",
+                        help="Write live benchmark/tool-gen events as JSONL")
     parser.add_argument("--with-tools", action="store_true",
                         help="Include generated tools from the tool library")
+    parser.add_argument("--runner", choices=["host", "docker"], default="host",
+                        help="Command runner backend for shell and verifier commands (default: host)")
+    parser.add_argument("--docker-image", default=DEFAULT_DOCKER_IMAGE,
+                        help=f"Docker image to use with --runner docker (default: {DEFAULT_DOCKER_IMAGE})")
+    parser.add_argument("--dockerfile", default=str(DEFAULT_DOCKERFILE),
+                        help=f"Dockerfile used by --build-image (default: {DEFAULT_DOCKERFILE})")
+    parser.add_argument("--build-image", action="store_true",
+                        help="Build docker image before running benchmarks")
+    parser.add_argument("--docker-smoke", action="store_true",
+                        help="Run a quick docker smoke benchmark on representative tasks")
     parser.add_argument("--quiet", action="store_true", help="Suppress agent output")
     args = parser.parse_args()
+
+    project_root = Path(__file__).parent.parent
+    if args.build_image:
+        build_result = build_docker_image(
+            image=args.docker_image,
+            dockerfile=Path(args.dockerfile),
+            context=project_root,
+        )
+        if build_result.stdout:
+            print(build_result.stdout)
+        if build_result.returncode != 0:
+            if build_result.stderr:
+                print(build_result.stderr)
+            elif build_result.error:
+                print(build_result.error)
+            sys.exit(1)
+
+    command_runner = HostCommandRunner()
+    if args.runner == "docker" or args.docker_smoke:
+        command_runner = DockerCommandRunner(args.docker_image)
+    set_command_runner(command_runner)
 
     if args.compare:
         all_runs = {}
@@ -336,12 +493,38 @@ def main():
                 if with_tools:
                     results, meta = _run_self_improving(
                         ALL_TASKS, model, args.sota_model, verbose=not args.quiet,
+                        command_runner=command_runner,
+                        allow_verifier_feedback=args.allow_verifier_feedback,
+                        log_path=args.benchmark_log,
+                        config_name=config_spec,
+                        run_index=run_idx + 1,
                     )
                     config_runs.append(results)
                     all_meta.setdefault(config_spec, []).append(meta)
                 else:
-                    harness = _make_harness(model, verbose=not args.quiet)
-                    results = harness.run_all(ALL_TASKS)
+                    harness = _make_harness(
+                        model, verbose=not args.quiet, command_runner=command_runner
+                    )
+                    results = []
+                    for task_i, task in enumerate(ALL_TASKS, 1):
+                        if args.quiet:
+                            print(f"[{task_i}/{len(ALL_TASKS)}] {task.id}...", end=" ", flush=True)
+                        r = harness.run_task(task)
+                        results.append(r)
+                        _append_jsonl(args.benchmark_log, {
+                            "event": "task_result",
+                            "config": config_spec,
+                            "run_index": run_idx + 1,
+                            "task_index": task_i,
+                            "task_id": r.task_id,
+                            "model": model,
+                            "passed": r.passed,
+                            "verify_message": r.verify_message,
+                            "trajectory": _serialize_trajectory(r.trajectory),
+                            "tools_used": r.tools_used,
+                            "cost": r.estimated_cost,
+                        })
+                    EvalHarness._print_summary(results)
                     config_runs.append(results)
 
             all_runs[config_spec] = config_runs
@@ -362,6 +545,14 @@ def main():
 
         return
 
+    if args.docker_smoke:
+        smoke_tasks = [TASK_MAP[task_id] for task_id in DOCKER_SMOKE_TASK_IDS]
+        harness = _make_harness(
+            args.model, verbose=not args.quiet, command_runner=command_runner
+        )
+        harness.run_all(smoke_tasks)
+        return
+
     extra_tools = None
     augmented_prompt = None
     if args.with_tools:
@@ -378,8 +569,10 @@ def main():
         print(f"\nAvailable tasks: {', '.join(TASK_MAP.keys())}")
         sys.exit(0)
 
-    harness = _make_harness(args.model, verbose=not args.quiet,
-                            extra_tools=extra_tools, system_prompt=augmented_prompt)
+    harness = _make_harness(
+        args.model, verbose=not args.quiet, extra_tools=extra_tools,
+        system_prompt=augmented_prompt, command_runner=command_runner
+    )
 
     if args.task:
         if args.task not in TASK_MAP:

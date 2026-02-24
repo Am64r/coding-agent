@@ -1,8 +1,16 @@
-import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 
 from .task import VerifyResult
+from .command_runner import CommandRunner, HostCommandRunner
+
+
+_COMMAND_RUNNER: CommandRunner = HostCommandRunner()
+
+
+def set_command_runner(command_runner: CommandRunner):
+    global _COMMAND_RUNNER
+    _COMMAND_RUNNER = command_runner
 
 
 class Verifier(ABC):
@@ -43,26 +51,20 @@ class ShellOutput(Verifier):
         self.exact = exact
 
     def check(self, workspace: Path) -> VerifyResult:
-        try:
-            result = subprocess.run(
-                self.command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=30,
-                cwd=str(workspace)
-            )
-            output = result.stdout.strip()
-            passed = (output == self.expected) if self.exact else (self.expected in output)
-            if passed:
-                return VerifyResult(passed=True, message=f"Output matched: {output!r}")
-            return VerifyResult(
-                passed=False,
-                message=f"Expected {self.expected!r} in output, got: {output!r}"
-                + (f"\nSTDERR: {result.stderr.strip()}" if result.stderr.strip() else "")
-            )
-        except subprocess.TimeoutExpired:
+        result = _COMMAND_RUNNER.run(self.command, workspace, timeout=30)
+        if result.timed_out:
             return VerifyResult(passed=False, message="Verification command timed out")
+        if result.error:
+            return VerifyResult(passed=False, message=f"Verification command error: {result.error}")
+        output = result.stdout.strip()
+        passed = (output == self.expected) if self.exact else (self.expected in output)
+        if passed:
+            return VerifyResult(passed=True, message=f"Output matched: {output!r}")
+        return VerifyResult(
+            passed=False,
+            message=f"Expected {self.expected!r} in output, got: {output!r}"
+            + (f"\nSTDERR: {result.stderr.strip()}" if result.stderr.strip() else "")
+        )
 
 
 class TestsPasses(Verifier):
@@ -70,21 +72,15 @@ class TestsPasses(Verifier):
         self.command = command
 
     def check(self, workspace: Path) -> VerifyResult:
-        try:
-            result = subprocess.run(
-                self.command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=60,
-                cwd=str(workspace)
-            )
-            if result.returncode == 0:
-                return VerifyResult(passed=True, message=f"Tests passed\n{result.stdout.strip()}")
-            output = (result.stdout + result.stderr).strip()
-            return VerifyResult(passed=False, message=f"Tests failed (exit {result.returncode})\n{output}")
-        except subprocess.TimeoutExpired:
+        result = _COMMAND_RUNNER.run(self.command, workspace, timeout=60)
+        if result.timed_out:
             return VerifyResult(passed=False, message="Test command timed out")
+        if result.error:
+            return VerifyResult(passed=False, message=f"Test command error: {result.error}")
+        if result.returncode == 0:
+            return VerifyResult(passed=True, message=f"Tests passed\n{result.stdout.strip()}")
+        output = (result.stdout + result.stderr).strip()
+        return VerifyResult(passed=False, message=f"Tests failed (exit {result.returncode})\n{output}")
 
 
 class AllOf(Verifier):

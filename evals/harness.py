@@ -12,9 +12,10 @@ from tools.write_file import SCHEMA as write_file_schema, write_file as _write_f
 from tools.run_shell import SCHEMA as run_shell_schema, run_shell as _run_shell
 
 from .task import EvalTask, TaskResult, ToolCallRecord
+from .command_runner import CommandRunner, HostCommandRunner
 
 
-def _build_toolbox(workspace: Path):
+def _build_toolbox(workspace: Path, command_runner: CommandRunner):
     def resolve(path: str) -> str:
         p = Path(path)
         return str(p if p.is_absolute() else workspace / p)
@@ -38,22 +39,17 @@ def _build_toolbox(workspace: Path):
             return f"Error: {e}"
 
     def run_shell(command: str) -> str:
-        import subprocess
-        try:
-            result = subprocess.run(
-                command, shell=True, capture_output=True, text=True,
-                timeout=30, cwd=str(workspace)
-            )
-            output = result.stdout
-            if result.stderr:
-                output += f"\nSTDERR: {result.stderr}"
-            if result.returncode != 0:
-                output += f"\nExit code: {result.returncode}"
-            return output.strip() or "(no output)"
-        except subprocess.TimeoutExpired:
+        result = command_runner.run(command, workspace, timeout=30)
+        if result.timed_out:
             return "Error: command timed out after 30 seconds"
-        except Exception as e:
-            return f"Error: {e}"
+        if result.error:
+            return f"Error: {result.error}"
+        output = result.stdout
+        if result.stderr:
+            output += f"\nSTDERR: {result.stderr}"
+        if result.returncode != 0:
+            output += f"\nExit code: {result.returncode}"
+        return output.strip() or "(no output)"
 
     schemas = [read_file_schema, write_file_schema, run_shell_schema]
     handlers = {"read_file": read_file, "write_file": write_file, "run_shell": run_shell}
@@ -68,12 +64,14 @@ def _build_toolbox(workspace: Path):
 
 class EvalHarness:
     def __init__(self, client: LLMClient, verbose: bool = True, model_name: str = "",
-                 extra_tools: tuple = None, system_prompt: str = None):
+                 extra_tools: tuple = None, system_prompt: str = None,
+                 command_runner: CommandRunner | None = None):
         self.client = client
         self.verbose = verbose
         self.model_name = model_name
         self.extra_tools = extra_tools
         self.system_prompt = system_prompt
+        self.command_runner = command_runner or HostCommandRunner()
 
     def run_task(self, task: EvalTask) -> TaskResult:
         workspace = Path(tempfile.mkdtemp(prefix=f"eval_{task.id}_"))
@@ -82,7 +80,7 @@ class EvalHarness:
         try:
             task.setup(workspace)
 
-            schemas, base_dispatch = _build_toolbox(workspace)
+            schemas, base_dispatch = _build_toolbox(workspace, self.command_runner)
 
             if self.extra_tools:
                 extra_schemas, extra_handlers = self.extra_tools

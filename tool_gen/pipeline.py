@@ -44,6 +44,35 @@ def _build_tool_examples_section(usage_examples):
     return "\n".join(lines)
 
 
+def _extract_agent_observable_signals(task_result, max_chars=3000):
+    lines = []
+    for tc in task_result.trajectory:
+        if tc.name != "run_shell":
+            continue
+        output = tc.result or ""
+        if any(token in output for token in ("Traceback", "AssertionError", "FAILED", "Error:", "Exit code:")):
+            cmd = tc.args.get("command", "") if isinstance(tc.args, dict) else ""
+            lines.append(f"$ {cmd}\n{output[:800]}")
+    if not lines:
+        return "No explicit self-test failure logs were observed in run_shell outputs."
+    content = "\n\n".join(lines[-4:])
+    return content[:max_chars]
+
+
+def _generation_feedback(task_result, allow_verifier_feedback):
+    if allow_verifier_feedback:
+        return task_result.verify_message
+    runtime_error = f"\nAgent runtime error: {task_result.error}" if task_result.error else ""
+    signals = _extract_agent_observable_signals(task_result)
+    return (
+        "Hidden verifier result: FAIL.\n"
+        "Do not assume access to hidden tests. Infer likely failure modes from the agent's own actions.\n"
+        f"{runtime_error}\n\n"
+        "Agent-observable signals:\n"
+        f"{signals}"
+    )
+
+
 def _validate_tool_code(code, verbose=True):
     namespace = {}
     try:
@@ -160,6 +189,7 @@ def run_pipeline(
     sota_model: str = "gpt-4o",
     max_attempts: int = 3,
     verbose: bool = True,
+    allow_verifier_feedback: bool = False,
 ):
     if verbose:
         print(f"\n{'='*60}")
@@ -196,7 +226,7 @@ def run_pipeline(
         tool_code, gen_in, gen_out = generate_tool(
             task_prompt=task.prompt,
             trajectory=initial_result.trajectory,
-            verify_message=initial_result.verify_message,
+            verify_message=_generation_feedback(initial_result, allow_verifier_feedback),
             model=sota_model,
             retry_info=retry_info,
             existing_tools=existing_tools,
@@ -256,7 +286,7 @@ def run_pipeline(
                 print(f"  Still failed with tool. Removing and retrying...")
             retry_info = {
                 "tool_name": tool_name,
-                "verify_message": retry_result.verify_message,
+                "verify_message": _generation_feedback(retry_result, allow_verifier_feedback),
             }
             tool_library.remove_tool(tool_name)
 

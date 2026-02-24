@@ -21,6 +21,8 @@ def main():
     parser.add_argument("--cheap-model", default="gpt-4o-mini", help="Cheap model (default: gpt-4o-mini)")
     parser.add_argument("--sota-model", default="gpt-4o", help="SOTA model for tool generation (default: gpt-4o)")
     parser.add_argument("--max-attempts", type=int, default=3, help="Max generation attempts per task (default: 3)")
+    parser.add_argument("--allow-verifier-feedback", action="store_true",
+                        help="Allow tool generation to see raw hidden verifier output (default: off)")
     parser.add_argument("--quiet", action="store_true", help="Suppress verbose output")
     args = parser.parse_args()
 
@@ -62,6 +64,7 @@ def main():
             sota_model=args.sota_model,
             max_attempts=args.max_attempts,
             verbose=not args.quiet,
+            allow_verifier_feedback=args.allow_verifier_feedback,
         )
         results.append(result)
 

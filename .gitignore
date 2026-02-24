@@ -6,3 +6,5 @@ __pycache__/
 .DS_Store
 agent/created_files/
 tool_library/generated/
+benchmark_live.jsonl
+results_docker*.json

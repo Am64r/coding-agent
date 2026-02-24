@@ -1,0 +1,6 @@
+FROM python:3.11-slim
+ENV PYTHONUNBUFFERED=1
+ENV TZ=UTC
+WORKDIR /workspace
+COPY evals/requirements-benchmark.txt /tmp/requirements-benchmark.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-benchmark.txt
